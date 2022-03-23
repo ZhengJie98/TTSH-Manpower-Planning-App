@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar App Vanilla JS</title>
+
+    
+    <link rel="stylesheet" href="{{url_for('static', filename='css/calendar_events_2.css')}}"/>
+    
+    <style>
+      body{
+        background-image: url("https://lh3.googleusercontent.com/dHxAbVpWnm_yL82erBniZ1KXu6Q8Y_M64yd5l75H7XUSQijZ_oQVT-SjTPbLziMmXBHvQ2CN41Qc21LVJMuV6G0d4C0fDNu74IQqwLWTwUJNvODSHaN3-plFWb3v1fJx9Q6f2KmH=w2400");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        width: 100%;
+        height: 100%; 
+        position: absolute;
+      } 
+
+      .button {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding: 10px 10px;
+        text-align: center;
+        justify-content: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 15px;
+      }
+
+      /* NAVBAR STUFFS */
+      .navbar {
+        background-color: #333;
+        overflow: hidden;
+        position: fixed;
+        top: 0;
+        width: 50%;
+        margin-top: 1%;
+      }
+
+      /* Style the links inside the navigation bar */
+      .navbar a {
+        float: left;
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+      }
+
+      /* Change the color of links on hover */
+      .navbar a:hover {
+        background-color: #ddd;
+        color: black;
+      }
+
+      /* Add a color to the active/current link */
+      .navbar a.active {
+        background-color: #04AA6D;
+        color: white;
+      }
+      
+    </style>
+
+  </head>
+  <body>
+    
+    <img class = "logo" src = "https://lh3.googleusercontent.com/eFzB1C4iHj0hNq6fcocuQ5lA9-Aq9OVPxN33R1aVW3U7eCT2VGdbgu2kMz4l9lppktmXj9Ze_bRNH5LFjth5IUEY08N38MTncLoLY1JOtj79iGmxp5xYCSjXu0kjjOo-YyPol_7_=w2400" style="width:15%; position:absolute; top:0; left:0; margin-top: 20px; margin-left: 40px;" >
+    
+    <div class = "center" id="container" style="position: relative;">
+      <div id="header">
+        <div id="monthDisplay"></div>
+        <div>
+          <button id="backButton">Back</button>
+          <button id="nextButton">Next</button>
+        </div>
+      </div>
+
+      <div id="weekdays">
+        <div>Sunday</div>
+        <div>Monday</div>
+        <div>Tuesday</div>
+        <div>Wednesday</div>
+        <div>Thursday</div>
+        <div>Friday</div>
+        <div>Saturday</div>
+      </div>
+      
+      <div id="calendar"></div>
+
+      <div style = "margin-top: 1%; background-color: white; border-radius: 25px; height: 80px;">
+        <button class = "button" style="background-color:brown;">Approve Leave</button>
+        <button class = "button" style="background-color:brown;">Request Leave</button>
+      </div>
+      
+    </div>
+
+    
+
+
+
+    <div id="newEventModal">
+      <h2>New Event</h2>
+
+      <input id="eventTitleInput" placeholder="Event Title" />
+
+      <button id="saveButton">Save</button>
+      <button id="cancelButton">Cancel</button>
+    </div>
+
+    <div id="deleteEventModal">
+      <h2>Event</h2>
+
+      <p id="eventText"></p>
+
+      <button id="deleteButton">Delete</button>
+      <button id="closeButton">Close</button>
+    </div>
+
+    <div id="modalBackDrop"></div>
+
+    <!-- <div class="navbar">
+      <a href="#home" class="active">Home</a>
+      <a href="#news">News</a>
+      <a href="#contact">Contact</a>
+    </div> -->
+    
+
+  </body>
+
+</html>
+
+<script>
+
+  function filterIt(arr, searchKey) {
+    return arr.filter(obj => Object.keys(obj).some(key => obj[key].includes(searchKey)));
+  }
+
+  var leave_applications = "{{leave_applications}}".replace(/&#39/g, "");
+  var labelled_leave_applications = []
+  var labelled_employee_details = []
+  var leave_application_column_names = ['application_id','applicant_name','leave_start_date','leave_end_date','leave_am_pm_both','leave_reason', 'leave_application_timestamp', 'leave_number_of_days','leave_approved']
+  var employee_details = "{{employee_details}}".replace(/&#39/g, "");
+  
+  // Changing from string to object (employee_details)
+  var employee_details = employee_details.split(';), ')
+  for (each of employee_details){
+    var object_builder = []
+    each = each.replace(/;/g, "");
+    each = each.replace('[', "");
+    each = each.replace(']', "");
+    each = each.replace('(', "");
+    each = each.replace(')', "");
+    values_splitted = each.split(', ')
+    object_builder.employee_name = values_splitted[0]
+    object_builder.employee_position = values_splitted[1]
+    labelled_employee_details.push(object_builder)
+  }
+  console.log(labelled_employee_details)
+  
+  // Changing from string to object (leave_applications)
+  var leave_applications = leave_applications.split(';), ')
+  for (each of leave_applications){
+    var object_builder = []
+    each = each.replace(/;/g, "");
+    each = each.replace('[', "");
+    each = each.replace(']', "");
+    each = each.replace('(', "");
+    each = each.replace(')', "");
+    each = each.replace(" ", "");
+    // each = each.replace(/^\s/ ,"")
+    // leave_applications[counter] = each
+    
+    var values_splitted = each.split(',')
+    for (eacher in values_splitted){
+      // console.log(values_splitted[eacher])
+      values_splitted[eacher] = values_splitted[eacher].trim()
+      // console.log(values_splitted[eacher])
+    }
+    console.log(values_splitted)
+    object_builder.application_id = values_splitted[0]
+    object_builder.applicant_name = values_splitted[1]
+    object_builder.leave_start_date = values_splitted[2]
+    object_builder.leave_end_date = values_splitted[3]
+    object_builder.leave_am_pm_both = values_splitted[4]
+    object_builder.leave_reason = values_splitted[5]
+    object_builder.leave_application_timestamp = values_splitted[6]
+    object_builder.leave_number_of_days = values_splitted[7]
+    object_builder.leave_approved = values_splitted[8]
+
+    //adding position from employee_details//
+    
+    object_builder.employee_position = filterIt(labelled_employee_details,object_builder.applicant_name)[0].employee_position
+
+
+    labelled_leave_applications.push(object_builder)
+    // console.log(labelled_leave_applications)
+    // console.log(labelled_leave_applications)
+    // leave_application_obj.push(each.split(','))
+    // counter += 1
+    
+  }
+  console.log(labelled_leave_applications)
+  // console.log(filterIt(labelled_employee_details,'Ong Zheng Jie')[0].employee_position)
+
+
+
+  seperated_into_each_day = []
+  for (each_application of labelled_leave_applications){
+    // console.log(each_application)
+    var leave_start_date = each_application.leave_start_date
+    var leave_end_date = each_application.leave_end_date
+
+  // Get Objects of person and single dates (Inclusive)   
+    var getDaysArray = function(s,e) {for(var a=[],d=new Date(s);d<=e;d.setDate(d.getDate()+1)){ a.push(new Date(d));}return a;};
+    var daylist = getDaysArray(new Date(leave_start_date),new Date(leave_end_date));
+
+    for (day of daylist){
+      var each_leave_day = {}
+      // console.log(day)
+      var date = day.getDate()
+      var month = day.getMonth() + 1
+      var year = day.getFullYear()
+      // console.log(date,month,year)
+      var combined_date = `${date}/${month}/${year}`
+      // console.log("combined_date: ", combined_date)
+      each_leave_day.date = combined_date
+      each_leave_day.title = each_application.applicant_name
+      each_leave_day.employee_position = each_application.employee_position
+      each_leave_day.leave_approved = each_application.leave_approved
+      
+      seperated_into_each_day.push(each_leave_day)  
+    }
+        
+  }   
+  // console.log(seperated_into_each_day)
+  
+  // GROUP ALL BY DAYS//
+  group_by_days = seperated_into_each_day.reduce(function (r, a) {
+    r[a.date] = r[a.date] || [];
+    r[a.date].push(a);
+    return r;
+  }, Object.create(null));
+  // console.log(group_by_days);
+  // console.log(typeof(group_by_days));
+
+//   const storage = [
+//   { data: '1', status: '0' },
+//   { data: '2', status: '0' },
+//   { data: '3', status: '0' },
+//   { data: '4', status: '0' },
+//   { data: '5', status: '0' },
+//   { data: '6', status: '0' },
+//   { data: '7', status: '1' },
+// ];
+
+//   console.log(storage)
+//   const count = storage.filter(item => item.status === '0').length; // 6
+//   console.log(count)
+
+
+//APPROVED LEAVES OBJ
+approved_total_leave_by_roles_obj = []
+  for (each_day in group_by_days){
+    leave_by_role_obj = {}
+    // console.log(group_by_days[each_day])
+    // console.log("leave_approved: ", group_by_days[each_day].leave_approved)
+    
+    var pending_count = group_by_days[each_day].filter(function(item){
+      return item.leave_approved === "Pending";
+    }).length;
+    var consultant_count = group_by_days[each_day].filter(function(item){
+      return item.employee_position === 'Consultant' && item.leave_approved === "Yes";
+    }).length;
+    var registrar_count = group_by_days[each_day].filter(function(item){
+      return item.employee_position === 'Registrar' && item.leave_approved === "Yes";
+    }).length;
+    var medical_officer_count = group_by_days[each_day].filter(function(item){
+      return item.employee_position === 'Medical Officer' && item.leave_approved === "Yes";
+    }).length;
+
+    // console.log("Consultant Count: ", consultant_count)
+    // var consultant_count = group_by_days[each_day].filter(item => item.employee_position === 'Consultant').length;
+    // var registrar_count = group_by_days[each_day].filter(item => item.employee_position === 'Registrar').length;
+    // var medical_officer_count = group_by_days[each_day].filter(item => item.employee_position === 'Medical Officer').length;
+    //   counter = 0
+    // console.log(consultant_count,registrar_count,medical_officer_count)
+    
+    leave_by_role_obj.date = each_day
+    leave_by_role_obj.pending_count = pending_count
+    leave_by_role_obj.consultant_count = consultant_count
+    leave_by_role_obj.registrar_count = registrar_count
+    leave_by_role_obj.medical_officer_count = medical_officer_count
+    // console.log(leave_by_role_obj)
+    approved_total_leave_by_roles_obj.push(leave_by_role_obj)
+      
+  }
+  // console.log(approved_total_leave_by_roles_obj)
+    
+  
+  
+  //   console.log(`================${counter}============`)
+  // }
+  
+
+  
+
+
+
+
+</script>
+
+<script src="{{url_for('static', filename='js/calendar_events_2.js')}}"></script>

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}User{% endblock %}
+{% block content %}
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for msg in messages %}
+        <p>{{msg}}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+<div style="background-color: white;">
+<h1 class="title" id="username" >
+  Welcome, user!
+</h1>
+
+<body>
+  
+  <div id="leave_count">
+    Your leave count this year: ____
+  </div>
+
+
+  <div id="leave_count">
+    Your Leaves (pending/approved/rej) : ____
+  </div>
+   
+</body>
+
+</div>
+
+<script>
+  console.log("testing 123")
+  var user_information = "{{user_information}}".replace(/&#39/g, "");
+  user_information = user_information.replace(/;/g, "");
+  user_information = user_information.replace('[', "");
+  user_information = user_information.replace(']', "");
+  user_information = user_information.split(',')
+  console.log(user_information)
+  console.log(typeof(user_information))
+  // var replace_username = document.getElementById('username').innerText
+  // console.log(replace_username)
+  document.getElementById('username').innerText = `Welcome, ${user_information[1]}`
+  // console.log(replace_username)
+  console.log(document.getElementById('username').innerText)
+
+  // var someSession = '<%= Session["user"].ToString() %>';
+  // alert(someSession)
+</script>
+
+{% endblock %}

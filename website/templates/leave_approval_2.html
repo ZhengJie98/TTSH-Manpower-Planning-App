@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 style="text-align: center">Leave Approval Page</h1>
+    <form method = "POST" action = /leave_approval_page>
+        <table>
+            <tr>
+                <th>Application ID</th>
+                <th>Applicant Name</th>
+                <th>Applicant Position</th>
+                <th>Leave Start Date</th>
+                <th>Leave End Date</th>
+                <th>Leave AM/PM</th>
+                <th>Leave Application Timestamp</th>
+                <th>Leave Number of Days</th>
+                <th>Leave Reason</th>
+                <th>Approver Name</th>
+                <th>Leave Application Status</th>
+                <th>Approved Timestamp</th>
+                <th>Approve/Deny</th>
+                
+            </tr>
+            {% for row in leave_application_rows %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[-2] }}</td>
+                <td>{{ row[3] }}</td>
+                <td>{{ row[4] }}</td>
+                <td>{{ row[5] }}</td>
+                <td>{{ row[7] }}</td>
+                <td>{{ row[8] }}</td>
+                <td>{{ row[6] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[9] }}</td>
+                <td>{{ row[-4] }}</td>
+                <td>
+                        <button id="approve_leave_application_button {{row[0]}}" name = "submit_button" value = "Approve" onClick="pass_value(this.id)">Approve</button>
+                        <button id="deny_leave_application_button {{row[0]}}" name = "submit_button" value = "Deny" onClick="pass_value(this.id)">Deny</button>
+                        
+                    <!-- <button id="save_leave_application_button" name = "submit_button" value = "Save" onclick="get_form_inputs()">Save</button> -->
+                    <!-- <a href="/approve_leave_application/{{row[9]}}">Approve</a> -->
+                    <br>
+                    <!-- <a href="/deny_leave_application/{{row[9]}}">Deny</a> -->
+                </td>
+            </tr>
+            {% endfor %}
+            <!-- <form method = "POST" action = /leave_approval_page>
+                <input type="hidden" name="application_id" id="application_id" value="" />></button>
+            </form> -->
+        </table>
+        <input type="hidden" name="application_id" id="application_id" value="" /></button>
+    </form>
+
+
+</body>
+
+<script>
+    function pass_value(clicked_id){
+        // console.log(clicked_id)
+        // var pass_application_id = document.getElementById("application_id")
+        document.getElementById("application_id").value = clicked_id
+        
+    }
+    var leave_application_rows = "{{leave_application_rows}}".replace(/&#39/g, "");
+    // console.log(leave_application_rows)
+</script>
+
+</html>

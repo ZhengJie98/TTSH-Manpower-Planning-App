@@ -1,0 +1,78 @@
+<!-- NAVBAR only when user is authenticated and logged in -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Navigation</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"
+    />
+  </head>
+
+  <body>
+    <section class="is-primary is-fullheight" style = "width:100%; height:100%;">
+      
+      <div class="background-only">
+        <div class="" id = 'background-img'>
+            <img src="https://lh3.googleusercontent.com/dHxAbVpWnm_yL82erBniZ1KXu6Q8Y_M64yd5l75H7XUSQijZ_oQVT-SjTPbLziMmXBHvQ2CN41Qc21LVJMuV6G0d4C0fDNu74IQqwLWTwUJNvODSHaN3-plFWb3v1fJx9Q6f2KmH=w2400" style="height: 100vh; width: 100vw; position: absolute;" />
+        </div>
+        
+      </div>
+
+      <div class="hero-head">
+        <nav class="navbar" style="background-color:white;">
+          <div class="">
+            
+            <div class="" id = 'logo-img'>
+              <img src="https://lh3.googleusercontent.com/eFzB1C4iHj0hNq6fcocuQ5lA9-Aq9OVPxN33R1aVW3U7eCT2VGdbgu2kMz4l9lppktmXj9Ze_bRNH5LFjth5IUEY08N38MTncLoLY1JOtj79iGmxp5xYCSjXu0kjjOo-YyPol_7_=w2400" style="width:50%; margin-left:10%;" />
+            </div>
+          </div>
+
+          <div class="container">
+            <div id="navbarMenuHeroA" class="navbar-menu;" style="display:flex; position:relative;">
+            
+              <div class="navbar-end">
+                <a
+                  href="{{ url_for('auth.profile') }}"
+                  class="navbar-item"
+                  style="border:solid; border-color:black; font-weight:bold; padding:5%; margin-right: 0.5%;"
+                >
+                  Profile
+                </a>
+                <a
+                  href="{{ url_for('auth.calendar') }}"
+                  class="navbar-item"
+                  style="border:solid; border-color:black; font-weight:bold; padding:5%; margin-right: 0.5%;"
+                >
+                  Calendar
+                </a>
+                <a
+                  href="{{ url_for('auth.index') }}"
+                  class="navbar-item"
+                  style="border:solid; border-color:black; font-weight:bold; padding:5%; margin-right: 0.5%;"
+                >
+                  Logout
+                </a>
+                <!-- <a
+                  href="{{ url_for('auth.signup') }}"
+                  class="navbar-item"
+                  style="border:solid; border-color:black; font-weight:bold; padding:5%; margin-right: 0.5%;"
+                >
+                  Sign-Up
+                </a> -->
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          {% block content %} {% endblock %}
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

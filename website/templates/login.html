@@ -1,0 +1,81 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+</head>
+
+
+<body>
+    <section class="hero is-primary is-fullheight" style="width: 100%; height: 100%;">
+
+        <div class="background-and-logo">
+            <div class="" id = 'background-img'>
+                <img src="https://lh3.googleusercontent.com/dHxAbVpWnm_yL82erBniZ1KXu6Q8Y_M64yd5l75H7XUSQijZ_oQVT-SjTPbLziMmXBHvQ2CN41Qc21LVJMuV6G0d4C0fDNu74IQqwLWTwUJNvODSHaN3-plFWb3v1fJx9Q6f2KmH=w2400" style="height: 100vh; width: 100vw; position: absolute;" />
+            </div>
+            <div class="" id = 'logo-img'>
+                <img src="https://lh3.googleusercontent.com/eFzB1C4iHj0hNq6fcocuQ5lA9-Aq9OVPxN33R1aVW3U7eCT2VGdbgu2kMz4l9lppktmXj9Ze_bRNH5LFjth5IUEY08N38MTncLoLY1JOtj79iGmxp5xYCSjXu0kjjOo-YyPol_7_=w2400" style=" width: 15%; position: relative; margin-top: 20px; margin-left: 40px;" />
+            </div>
+        </div>
+
+        <div class="column is-4 is-offset-4" style="background-color:white; margin:auto; position:relative;">
+            <h3 class="title" style="font-weight: bold; color:black; text-align: center;">Login</h3>
+
+
+            <div class="box">
+                <form method="POST" action="/login">
+                
+
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-large" type="text" name="employee_name" placeholder="Employee Name" autofocus="">
+                        </div>
+                    </div>
+        
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-large" type="password" name="employee_password" placeholder="Password">
+                        </div>
+                    </div>
+                    <!-- <div class="field">
+                        <label class="checkbox">
+                            <input type="checkbox" name="remember">
+                            Remember me
+                        </label>
+                    </div> -->
+                    <button class="button is-block is-info is-large is-fullwidth" style="background-color: brown;" name = "submit_button" value = "Login">Login</button>
+                    
+                    <button class="button is-block is-info is-large is-fullwidth signup-margin" style=" margin-top: 10px;" name = "submit_button" value = "Signup">
+                            <a href="{{ url_for('auth.signup') }}">Sign Up</a> </button>
+                </form>
+
+                <div id="wrong-details" style="color:red; text-align: center; font-weight: bold; display:none;">
+                    <body > Name/Password is Incorrect!</body>
+                </div>
+
+                <div id="signup_completed" style="color:green; text-align: center; font-weight: bold; display:none;">
+                    <body > Sign-Up Completed! Please login to proceed</body>
+                </div>
+            </div>
+        </div>        
+    </section>
+    
+</body>
+
+<script>
+
+  // IF PASSWORD IS WRONG
+  var login_details = '{{login_details}}'
+//   console.log("Login Details:", login_details)
+  if (login_details == "True"){
+      document.getElementById("wrong-details").style.display = ""
+  }
+
+  //SIGNUP completed
+  var signup_completed= '{{signup_completed}}'
+  if (signup_completed == "True"){
+      document.getElementById("signup_completed").style.display = ""
+  }
+</script>
+</html>

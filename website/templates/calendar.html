@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar App Vanilla JS</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/calendar_events_2.css')}}"
+    />
+    <script src="https://kit.fontawesome.com/761df61c55.js" crossorigin="anonymous"></script>
+
+    <style>
+      body {
+        background-image: url("https://lh3.googleusercontent.com/dHxAbVpWnm_yL82erBniZ1KXu6Q8Y_M64yd5l75H7XUSQijZ_oQVT-SjTPbLziMmXBHvQ2CN41Qc21LVJMuV6G0d4C0fDNu74IQqwLWTwUJNvODSHaN3-plFWb3v1fJx9Q6f2KmH=w2400");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+      }
+
+      .button {
+        background-color: #4caf50; /* Green */
+        border: none;
+        color: white;
+        padding: 10px 10px;
+        text-align: center;
+        justify-content: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 15px;
+      }
+
+      /* NAVBAR STUFFS */
+      .navbar {
+        background-color: #333;
+        overflow: hidden;
+        position: fixed;
+        top: 0;
+        width: 50%;
+        margin-top: 1%;
+      }
+
+      /* Style the links inside the navigation bar */
+      .navbar a {
+        float: left;
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+      }
+
+      /* Change the color of links on hover */
+      .navbar a:hover {
+        background-color: #ddd;
+        color: black;
+      }
+
+      /* Add a color to the active/current link */
+      .navbar a.active {
+        background-color: #04aa6d;
+        color: white;
+      }
+
+      #wrap #main #content .post #form label {
+        display:block;
+      }
+
+    </style>
+  </head>
+  
+  
+  <body>
+    <img
+      class="logo"
+      src="https://lh3.googleusercontent.com/eFzB1C4iHj0hNq6fcocuQ5lA9-Aq9OVPxN33R1aVW3U7eCT2VGdbgu2kMz4l9lppktmXj9Ze_bRNH5LFjth5IUEY08N38MTncLoLY1JOtj79iGmxp5xYCSjXu0kjjOo-YyPol_7_=w2400"
+      style="
+        width: 15%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin-top: 20px;
+        margin-left: 40px;
+      "
+    />
+
+    <div class="center" id="container" style="position: relative">
+      <div style="background-color: white; text-align: center; border-radius: 10px;">
+        <h1 id="username" >
+          Welcome, user!
+        </h1>
+      </div>
+      
+      
+      <div id="header">
+        <div id="monthDisplay"></div>
+        <div>
+          <button id="backButton" class="button">Back</button>
+          <button id="nextButton" class="button">Next</button>
+        </div>
+      </div>
+
+      <div id="weekdays">
+        <div>Sunday</div>
+        <div>Monday</div>
+        <div>Tuesday</div>
+        <div>Wednesday</div>
+        <div>Thursday</div>
+        <div>Friday</div>
+        <div>Saturday</div>
+      </div>
+
+      <div id="calendar"></div>
+
+      <div
+        style="
+          margin-top: 1%;
+          background-color: white;
+          border-radius: 25px;
+          height: 80px;
+          /* text-align:center; */
+          display: flex;
+          justify-content: right;
+          align-items: center;
+        
+        "
+      >
+        <button class="button" style="background-color: brown;  margin: 10px; width: 150px; height: 50px;" id="approve_leave">
+          <i class="fa-regular fa-square-check" style = margin:2px;></i> Approve Leave 
+        </button>
+        <button class="button" style="background-color: brown; margin: 10px; width: 150px; height: 50px;" id ="my_leaves_button">
+          <i class="fa-regular fa-file" style = margin:2px;></i> My Applications
+        </button>
+        <button class="button" style="background-color: brown; margin: 10px; width: 150px; height: 50px;" id ="request_leave">
+          <i class="fa-regular fa-calendar-plus" style = margin:2px;></i> Request Leave
+        </button>
+      </div>
+    </div>
+    <!-- &#9745;&#x2b; -->
+
+    <div id="newEventModal">
+      <h2>New Event</h2>
+
+      <input id="eventTitleInput" placeholder="Event Title" />
+
+      <button id="saveButton" >Save</button>
+      <button id="cancelButton">Cancel</button>
+    </div>
+
+    <div id="new_leave_application">
+      <h2>Leave Application</h2>
+
+      <form method = "POST" action = /calendar>
+        <input id="leave_reason_remarks" placeholder="Remarks" name = "leave_reason_remarks" type='text' value = "">   
+        <label class = "lineSpaceBig" for="leaveType">AM / PM</label>
+        <select id="leaveType" name="leaveType">
+          <option value= "AM" >AM</option>
+          <option value= "PM" >PM</option>
+          <option value= "BOTH" >BOTH</option>
+        </select> 
+        <br>
+
+      <label class = "lineSpaceBig"  for="start">Start date:</label>
+
+      <input type="date" id="startDate" name="leaveStart"
+              value="2022-03-10"
+              min="2018-01-01" max="2050-12-31">
+              <br>
+        
+      <label class = "lineSpaceBig" for="end">End date:</label>
+
+      <input type="date" id="endDate" name="leaveEnd"
+              value="2022-03-15"
+              min="2018-01-01" max="2050-12-31" ;>
+              <br>
+
+    <input id="auto_approve_pass_to_python" placeholder="Remarks" name = "auto_approve_pass_to_python" style="display:none" value = ""> 
+
+      <button id="save_leave_application_button" name = "submit_button" value = "Save" onclick="get_form_inputs()" class="button Yes">Save</button>
+      <button id="cancel_leave_application_button" name = "submit_button" value = "Cancel" class="button No" >Cancel</button>
+    </form>
+    
+
+    </div>
+
+    <div id="approve_leave_application";>
+      <h2>Approve Leave Application</h2>
+
+      <body>
+        <h1 style="text-align: center">Leave Approval Page</h1>
+        <form method = "POST" action = /calendar >
+            <table id = "leave_approval_table">
+                <tr>
+                    <th onclick="sort_approval_tableint(0)">Application ID</th>
+                    <th onclick="sort_approval_table(1)">Applicant Name</th>
+                    <th onclick="sort_approval_table(2)">Applicant Position</th>
+                    <th onclick="sort_approval_table(3)">Leave Start Date</th>
+                    <th onclick="sort_approval_table(4)">Leave End Date</th>
+                    <th onclick="sort_approval_table(5)">Leave AM/PM</th>
+                    <th onclick="sort_approval_table(6)">Leave Application Timestamp</th>
+                    <th onclick="sort_approval_tableint(7)">Leave Number of Days</th>
+                    <th onclick="sort_approval_table(8)">Leave Reason</th>
+                    <th onclick="sort_approval_table(9)">Approver Name</th>
+                    <th onclick="sort_approval_table(10)">Leave Application Status</th>
+                    <th onclick="sort_approval_table(11)">Approved Timestamp</th>
+                    <th>Approve/Deny</th>
+                    
+                </tr>
+                {% for row in leave_application_rows %}
+                <tr class="approval_table_values">
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[-2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td>{{ row[5] }}</td>
+                    <td>{{ row[7] }}</td>
+                    <td>{{ row[8] }}</td>
+                    <td>{{ row[6] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[9] }}</td>
+                    <td>{{ row[-4] }}</td>
+                    <td>
+                            <button id="approve_leave_application_button {{row[0]}}" name = "submit_button" value = "Approve" class = "button Yes" onClick="pass_value(this.id)">Approve</button>
+                            <button id="deny_leave_application_button {{row[0]}}" name = "submit_button" value = "Deny" class = "button No" onClick="pass_value(this.id)">Deny</button>
+                            
+                        <!-- <button id="save_leave_application_button" name = "submit_button" value = "Save" onclick="get_form_inputs()">Save</button> -->
+                        <!-- <a href="/approve_leave_application/{{row[9]}}">Approve</a> -->
+                        <br>
+                        <!-- <a href="/deny_leave_application/{{row[9]}}">Deny</a> -->
+                    </td>
+                </tr>
+                {% endfor %}
+                <!-- <form method = "POST" action = /leave_approval_page>
+                    <input type="hidden" name="application_id" id="application_id" value="" />></button>
+                </form> -->
+            </table>
+            <input type="hidden" name="application_id" id="application_id" value="" /></button>
+            <input type="hidden" name="close_leave_approval_final" id="still_approving_form" value="NOT SET YET" /></button>
+            <button id="close_leave_approval_button" name = "submit_button" value = "close_leave_approval" class = "No">Close</button>
+    </form>
+    
+    
+    </body>
+    
+    
+
+    </div>
+
+    <div id="my_leaves_div";>
+      <h2>My Leaves</h2>
+
+      <body>
+        <h1 style="text-align: center">My Leaves Page</h1>
+        <form method = "POST" action = /calendar >
+            <table id = "my_leaves_table">
+                <tr>
+                    <th onclick="sort_my_leaves_tableint(0)">Application ID</th>
+                    <th onclick="sort_my_leaves_table(1)">Applicant Name</th>
+                    <th onclick="sort_my_leaves_table(2)">Applicant Position</th>
+                    <th onclick="sort_my_leaves_table(3)">Leave Start Date</th>
+                    <th onclick="sort_my_leaves_table(4)">Leave End Date</th>
+                    <th onclick="sort_my_leaves_table(5)">Leave AM/PM</th>
+                    <th onclick="sort_my_leaves_table(6)">Leave Application Timestamp</th>
+                    <th onclick="sort_my_leaves_tableint(7)">Leave Number of Days</th>
+                    <th onclick="sort_my_leaves_table(8)">Leave Reason</th>
+                    <th onclick="sort_my_leaves_table(9)">Approver Name</th>
+                    <th onclick="sort_my_leaves_table(10)">Leave Application Status</th>
+                    <th onclick="sort_my_leaves_table(11)">Approved Timestamp</th>
+                    
+                </tr>
+                {% for row in my_leaves_rows %}
+                <tr class="my_leaves_table_values">
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[-2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td>{{ row[5] }}</td>
+                    <td>{{ row[7] }}</td>
+                    <td>{{ row[8] }}</td>
+                    <td>{{ row[6] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[9] }}</td>
+                    <td>{{ row[-4] }}</td>
+                </tr>
+                {% endfor %}
+                <!-- <form method = "POST" action = /leave_approval_page>
+                    <input type="hidden" name="application_id" id="application_id" value="" />></button>
+                </form> -->
+            </table>
+            <!-- <input type="hidden" name="application_id" id="application_id" value="" /></button>
+            <input type="hidden" name="close_leave_approval_final" id="still_approving_form" value="NOT SET YET" /></button> -->
+            <button id="close_my_leaves_button" name = "submit_button" value = "close_my_leaves" class = "No">Close</button>
+    </form>
+    
+    
+    </body>
+    
+    
+
+    </div>
+
+    <div id="deleteEventModal">
+      <h2>Event</h2>
+
+      <p id="eventText"></p>
+
+      <button id="deleteButton">Delete</button>
+      <button id="closeButton">Close</button>
+    </div>
+
+    <div id="modalBackDrop"></div>
+
+    <!-- <div class="navbar">
+      <a href="#home" class="active">Home</a>
+      <a href="#news">News</a>
+      <a href="#contact">Contact</a>
+    </div> -->
+  </body>
+</html>
+
+<script>
+  console.log("=========Calendar Event Script Starting==========")
+  var applicant_name = "{{applicant_name}}"
+  var is_admin = "{{is_admin}}"
+  // console.log(localStorage.getItem("keep_open"))
+  // console.log(localStorage.getItem("keep_close"))
+  
+
+  
+
+  if (is_admin == "1"){
+    var admin_display = " Admin"
+    
+  }
+  else if (is_admin == "0"){
+    // var admin_display = "User"
+    var admin_display = ""
+    document.getElementById("approve_leave").style.display="none"
+  }
+  
+  // console.log(typeof(is_admin))
+  // document.getElementById('username').innerText = `Welcome, ${applicant_name}`
+  // console.log(applicant_name)
+
+  //REPLACING HTML with todays date so applicants dont need to keep scrolling
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+  today = yyyy + '-' + mm + '-' + dd;
+  // console.log(today)
+  document.getElementById('startDate').value=today
+  document.getElementById('endDate').value=today
+  
+  function filterIt(arr, searchKey) {
+    return arr.filter((obj) =>
+      Object.keys(obj).some((key) => obj[key].includes(searchKey))
+    );
+  }
+
+  var leave_applications = "{{leave_applications}}".replace(/&#39/g, "");
+  var labelled_leave_applications = [];
+  var labelled_employee_details = [];
+  var leave_application_column_names = [
+    "application_id",
+    "applicant_name",
+    "leave_start_date",
+    "leave_end_date",
+    "leave_am_pm_both",
+    "leave_reason",
+    "leave_application_timestamp",
+    "leave_number_of_days",
+    "leave_approved",
+  ];
+  var employee_details = "{{employee_details}}".replace(/&#39/g, "");
+
+  // Changing from string to object (employee_details)
+  var employee_details = employee_details.split(";), ");
+  for (each of employee_details) {
+    var object_builder = [];
+    each = each.replace(/;/g, "");
+    each = each.replace("[", "");
+    each = each.replace("]", "");
+    each = each.replace("(", "");
+    each = each.replace(")", "");
+    values_splitted = each.split(", ");
+    object_builder.employee_name = values_splitted[0];
+    object_builder.employee_position = values_splitted[1];
+    labelled_employee_details.push(object_builder);
+  }
+  // console.log(labelled_employee_details);
+    applicant_position = labelled_employee_details.filter(function (item) {
+      return (
+        item.employee_name === applicant_name)})[0].employee_position
+
+    document.getElementById('username').innerText = `Welcome, ${applicant_name} (${applicant_position}${admin_display})`
+    
+
+  // Changing from string to object (leave_applications)
+  var leave_applications = leave_applications.split(";), ");
+  for (each of leave_applications) {
+    var object_builder = [];
+    each = each.replace(/;/g, "");
+    each = each.replace("[", "");
+    each = each.replace("]", "");
+    each = each.replace("(", "");
+    each = each.replace(")", "");
+    each = each.replace(" ", "");
+    // each = each.replace(/^\s/ ,"")
+    // leave_applications[counter] = each
+
+    var values_splitted = each.split(",");
+    for (eacher in values_splitted) {
+      // console.log(values_splitted[eacher])
+      values_splitted[eacher] = values_splitted[eacher].trim();
+      // console.log(values_splitted[eacher])
+    }
+    // console.log(values_splitted);
+    object_builder.application_id = values_splitted[0];
+    object_builder.applicant_name = values_splitted[1];
+    object_builder.approver_name = values_splitted[2]
+    object_builder.leave_start_date = values_splitted[3];
+    object_builder.leave_end_date = values_splitted[4];
+    object_builder.leave_am_pm_both = values_splitted[5];
+    object_builder.leave_reason = values_splitted[6];
+    object_builder.leave_application_timestamp = values_splitted[7];
+    object_builder.leave_number_of_days = values_splitted[8];
+    object_builder.leave_application_status = values_splitted[9];
+    object_builder.leave_approved_timestamp = values_splitted[10];
+
+    //adding position from employee_details//
+
+    object_builder.employee_position = filterIt(
+      labelled_employee_details,
+      object_builder.applicant_name
+    )[0].employee_position;
+
+    labelled_leave_applications.push(object_builder);
+    // console.log(labelled_leave_applications)
+    // console.log(labelled_leave_applications)
+    // leave_application_obj.push(each.split(','))
+    // counter += 1
+  }
+  // console.log(labelled_leave_applications);
+  // console.log(filterIt(labelled_employee_details,'Ong Zheng Jie')[0].employee_position)
+
+  seperated_into_each_day = [];
+  for (each_application of labelled_leave_applications) {
+    // console.log(each_application)
+    var leave_start_date = each_application.leave_start_date;
+    var leave_end_date = each_application.leave_end_date;
+
+    // Get Objects of person and single dates (Inclusive)
+    var getDaysArray = function (s, e) {
+      for (var a = [], d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) {
+        a.push(new Date(d));
+      }
+      return a;
+    };
+    var daylist = getDaysArray(
+      new Date(leave_start_date),
+      new Date(leave_end_date)
+    );
+    
+
+
+    for (day of daylist) {
+      var each_leave_day = {};
+      // console.log(day)
+      var date = day.getDate();
+      var month = day.getMonth() + 1;
+      var year = day.getFullYear();
+      // console.log(date,month,year)
+      var combined_date = `${date}/${month}/${year}`;
+      // console.log("combined_date: ", combined_date)
+      each_leave_day.date = combined_date;
+      each_leave_day.title = each_application.applicant_name;
+      each_leave_day.employee_position = each_application.employee_position;
+      each_leave_day.leave_application_status = each_application.leave_application_status;
+      each_leave_day.leave_am_pm_both = each_application.leave_am_pm_both
+
+      seperated_into_each_day.push(each_leave_day);
+    }
+  }
+  // console.log(seperated_into_each_day)
+
+  // GROUP ALL BY DAYS//
+  group_by_days = seperated_into_each_day.reduce(function (r, a) {
+    r[a.date] = r[a.date] || [];
+    r[a.date].push(a);
+    return r;
+  }, Object.create(null));
+
+
+  // //APPROVED LEAVES OBJ BY ROLES OLD VERSION
+  // approved_total_leave_by_roles_obj = [];
+  // for (each_day in group_by_days) {
+  //   leave_by_role_obj = {};
+  //   // console.log(group_by_days[each_day])
+  //   // console.log("leave_approved: ", group_by_days[each_day].leave_application_status)
+
+  //   var pending_count = group_by_days[each_day].filter(function (item) {
+  //     return item.leave_application_status === "PENDING";
+  //   }).length;
+  //   var consultant_count = group_by_days[each_day].filter(function (item) {
+  //     return (
+  //       item.employee_position === "Consultant" && item.leave_application_status === "APPROVED"
+  //     );
+  //   }).length;
+  //   var registrar_count = group_by_days[each_day].filter(function (item) {
+  //     return (
+  //       item.employee_position === "Registrar" && item.leave_application_status === "APPROVED"
+  //     );
+  //   }).length;
+  //   var medical_officer_count = group_by_days[each_day].filter(function (item) {
+  //     return (
+  //       item.employee_position === "Medical Officer" &&
+  //       item.leave_application_status === "APPROVED"
+  //     );
+  //   }).length;
+
+  //   leave_by_role_obj.date = each_day;
+  //   leave_by_role_obj.pending_count = pending_count;
+  //   leave_by_role_obj.consultant_count = consultant_count;
+  //   leave_by_role_obj.registrar_count = registrar_count;
+  //   leave_by_role_obj.medical_officer_count = medical_officer_count;
+  //   // console.log(leave_by_role_obj)
+  //   approved_total_leave_by_roles_obj.push(leave_by_role_obj);
+  // }
+  
+  // console.log(approved_total_leave_by_roles_obj)
+  // console.log(applicant_position)
+
+  //APPROVED LEAVES OBJ BY ROLES SEPERATED INTO AM AND PM
+  approved_total_leave_by_roles_obj = [];
+  for (each_day in group_by_days) {
+    leave_by_role_obj = {};
+    // console.log(group_by_days[each_day])
+    // console.log("leave_approved: ", group_by_days[each_day].leave_application_status)
+
+    var all_pending_count = group_by_days[each_day].filter(function (item) {
+      return item.leave_application_status === "PENDING";
+    }).length;
+
+    var consultant_pending_count = group_by_days[each_day].filter(function (item) {
+      return item.leave_application_status === "PENDING" && item.employee_position === "Consultant";
+    }).length;
+
+    var registrar_pending_count = group_by_days[each_day].filter(function (item) {
+      return item.leave_application_status === "PENDING" && item.employee_position === "Registrar";
+    }).length;
+
+    var medical_officer_pending_count = group_by_days[each_day].filter(function (item) {
+      return item.leave_application_status === "PENDING" && item.employee_position === "Medical Officer";
+    }).length;
+
+    var consultant_count_am_only = group_by_days[each_day].filter(function (item) {
+      return (
+        item.employee_position === "Consultant" && item.leave_application_status === "APPROVED" && item.leave_am_pm_both ==="AM"
+      );
+    }).length;
+
+    var consultant_count_pm_only = group_by_days[each_day].filter(function (item) {
+      return (
+        item.employee_position === "Consultant" && item.leave_application_status === "APPROVED" && item.leave_am_pm_both ==="PM"
+      );
+    }).length;
+
+    var consultant_count_both_only = group_by_days[each_day].filter(function (item) {
+      return (
+        item.employee_position === "Consultant" && item.leave_application_status === "APPROVED" && item.leave_am_pm_both ==="BOTH"
+      );
+    }).length;
+    
+    var consultant_count_am_both = consultant_count_am_only + consultant_count_both_only
+    var consultant_count_pm_both = consultant_count_pm_only + consultant_count_both_only
+
+    var registrar_count_am_only = group_by_days[each_day].filter(function (item) {
+    return (
+      item.employee_position === "Registrar" && item.leave_application_status === "APPROVED" && item.leave_am_pm_both ==="AM"
+    );
+    }).length;
+
+    var registrar_count_pm_only = group_by_days[each_day].filter(function (item) {
+      return (
+        item.employee_position === "Registrar" && item.leave_application_status === "APPROVED" && item.leave_am_pm_both ==="PM"
+      );
+    }).length;
+
+    var registrar_count_both_only = group_by_days[each_day].filter(function (item) {
+      return (
+        item.employee_position === "Registrar" && item.leave_application_status === "APPROVED" && item.leave_am_pm_both ==="BOTH"
+      );
+    }).length;
+    
+    var registrar_count_am_both = registrar_count_am_only + registrar_count_both_only
+    var registrar_count_pm_both = registrar_count_pm_only + registrar_count_both_only
+    
+    
+    var medical_officer_count_am_only = group_by_days[each_day].filter(function (item) {
+      return (
+        item.employee_position === "Medical Officer" && item.leave_application_status === "APPROVED" && item.leave_am_pm_both ==="AM"
+      );
+    }).length;
+
+    var medical_officer_count_pm_only = group_by_days[each_day].filter(function (item) {
+      return (
+        item.employee_position === "Medical Officer" && item.leave_application_status === "APPROVED" && item.leave_am_pm_both ==="PM"
+      );
+    }).length;
+
+    var medical_officer_count_both_only = group_by_days[each_day].filter(function (item) {
+      return (
+        item.employee_position === "Medical Officer" && item.leave_application_status === "APPROVED" && item.leave_am_pm_both ==="BOTH"
+      );
+    }).length;
+    
+    var medical_officer_count_am_both = medical_officer_count_am_only + medical_officer_count_both_only
+    var medical_officer_count_pm_both = medical_officer_count_pm_only + medical_officer_count_both_only
+    
+
+    leave_by_role_obj.date = each_day;
+    leave_by_role_obj.all_pending_count = all_pending_count;
+    leave_by_role_obj.consultant_pending_count = consultant_pending_count;
+    leave_by_role_obj.registrar_pending_count = registrar_pending_count;
+    leave_by_role_obj.medical_officer_pending_count = medical_officer_pending_count;
+    leave_by_role_obj.consultant_count_am_both = consultant_count_am_both;
+    leave_by_role_obj.consultant_count_pm_both = consultant_count_pm_both;
+    leave_by_role_obj.registrar_count_am_both = registrar_count_am_both;
+    leave_by_role_obj.registrar_count_pm_both = registrar_count_pm_both;
+    leave_by_role_obj.medical_officer_count_am_both = medical_officer_count_am_both;
+    leave_by_role_obj.medical_officer_count_pm_both = medical_officer_count_pm_both;
+        
+    // console.log(leave_by_role_obj)
+    approved_total_leave_by_roles_obj.push(leave_by_role_obj);
+  }
+
+ 
+  
+  // console.log(approved_total_leave_by_roles_obj)
+  // console.log(applicant_position)
+
+  
+  // each_day = approved_total_leave_by_roles_obj.filter(function (item) {
+  //     return (
+  //       item.date === "12/3/2022")})[0]
+  // console.log(each_day.consultant_count)
+
+  
+  
+  function get_form_inputs() {
+    applicant_start_date = document.getElementById("startDate").value
+    applicant_end_date = document.getElementById("endDate").value
+    console.log(applicant_end_date)
+    // console.log(applicant_start_date,applicant_end_date)
+    var daylist = getDaysArray(
+      new Date(applicant_start_date),
+      new Date(applicant_end_date)
+    )
+    var leave_days = [];
+    for (day of daylist) {
+      
+      // console.log(day)
+      var date = day.getDate();
+      var month = day.getMonth() + 1;
+      var year = day.getFullYear();
+      // console.log(date,month,year)
+      var combined_date = `${date}/${month}/${year}`;
+      leave_days.push(combined_date)
+      
+  }
+    // console.log(leave_days)
+    auto_approve_pass_to_python = []
+    // prompt(leave_days)
+    for (day of leave_days){
+      // console.log(day)
+      each_day = approved_total_leave_by_roles_obj.filter(function (item) {
+      return (
+        item.date === day)})[0]
+      // console.log(each_day)
+      
+      if (applicant_position == "Consultant"){
+        if (typeof(each_day) != "undefined"){
+          auto_approve_pass_to_python.push(each_day.consultant_count_am_both,each_day.consultant_count_pm_both)
+        }
+        else{
+          auto_approve_pass_to_python.push(0,0)
+        }
+        
+        
+      }
+
+      else if (applicant_position == "Registrar"){
+        if (typeof(each_day) != "undefined"){
+          auto_approve_pass_to_python.push(each_day.registrar_count_am_both,each_day.registrar_count_pm_both)
+        }
+        else{
+          auto_approve_pass_to_python.push(0,0)
+        }
+      }
+
+      else if (applicant_position == "Medical Officer"){
+        if (typeof(each_day) != "undefined"){
+          auto_approve_pass_to_python.push(each_day.medical_officer_count_am_both,each_day.medical_officer_count_pm_both)
+        }
+        else{
+          auto_approve_pass_to_python.push(0,0)
+        }
+      }
+    }
+    // prompt(auto_approve_pass_to_python)
+    // console.log(auto_approve_pass_to_python)
+    document.getElementById("auto_approve_pass_to_python").value = auto_approve_pass_to_python
+    // console.log(typeof(auto_approve_pass_to_python))
+}
+  function pass_value(clicked_id){
+          // console.log(clicked_id)
+          // var pass_application_id = document.getElementById("application_id")
+          document.getElementById("application_id").value = clicked_id
+          
+      }
+
+</script>
+
+<script src="{{url_for('static', filename='js/calendar_events_2.js')}}"></script>
