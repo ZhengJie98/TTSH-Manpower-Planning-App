@@ -1,3 +1,7 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 
 *.pyc
 website/__pycache__/__init__.cpython-39.pyc
