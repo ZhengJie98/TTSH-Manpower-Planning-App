@@ -8,6 +8,7 @@ import sqlite3
 import os
 import jyserver.Flask as jsf
 import json
+# import xlsxwriter
 
 max_consultant_leave = 5
 max_registrar_leave = 5
@@ -43,10 +44,8 @@ def login():
         ## CONNECT DATABASE     
         currentdirectory = os.path.dirname(os.path.abspath(__file__))
         # print("NOW WE ARE IN:" , currentdirectory)
-        # connect_directory = connect_directory = os.path.join(currentdirectory, 'pythonsqlite.db')
+        connect_directory = connect_directory = os.path.join(currentdirectory, 'pythonsqlite.db')
 
-        connect_directory = os.path.join(currentdirectory, 'pythonsqlite.db')
-        print(connect_directory)
         # print(connect_directory)
         connection = sqlite3.connect(connect_directory)
         cursor = connection.cursor()
@@ -362,6 +361,7 @@ def calendar():
         rows = result.fetchall()
         leave_applications = rows
         # print(leave_applications)
+        
 
         # return render_template('calendar.html', leave_applications = leave_applications, employee_details = employee_details, applicant_name=applicant_name,is_admin = session['is_admin'])
         # return redirect(url_for('auth.calendar', leave_applications = leave_applications, employee_details = employee_details, applicant_name=applicant_name,is_admin = session['is_admin']))
@@ -425,6 +425,30 @@ def calendar():
     # result = cursor.execute(query)
     # leave_application_rows = result.fetchall()
     # print(leave_application_rows)
+    # print(leave_application_rows)
+
+    # ## CSV EXPORT
+    # workbook = xlsxwriter.Workbook('export_file.xlsx')
+    # worksheet = workbook.add_worksheet()
+    # row = 0
+    # headers = ['Application ID', 'Applicant Name', 'Applicant Position', 'Leave Start Date', 'Leave End Date', 'Leave Application Timestamp', 'Leave Number Of Days', 'Leave Reason', 'Approver Name', 'Leave Application Status', 'Approved Timestamp']
+    # column = 0
+
+    # for each_item in headers:
+    #     worksheet.write(row,column,each_item)
+    #     column += 1
+
+    # row += 1
+
+    # for row_of_data in leave_application_rows:
+    #     column = 0
+    #     for each_item in row_of_data:
+    #     # print("each_row: ", row)
+    #         worksheet.write(row,column,each_item)
+    #         column += 1
+    #     row += 1
+
+    # workbook.close()
 
 
     return render_template('calendar.html', my_leaves_rows=my_leaves_rows, leave_application_rows=leave_application_rows, still_in_leave_approval = session['still_in_leave_approval'],leave_applications = leave_applications, employee_details = employee_details, applicant_name=applicant_name,is_admin = session['is_admin'])
@@ -488,7 +512,6 @@ def leave_approval_page():
                 ON employee_details.employee_name = leave_application.applicant_name'''
     result = cursor.execute(query)
     leave_application_rows = result.fetchall()
-    # print(leave_application_rows)
 
     return render_template('leave_approval_2.html', leave_application_rows=leave_application_rows)
 

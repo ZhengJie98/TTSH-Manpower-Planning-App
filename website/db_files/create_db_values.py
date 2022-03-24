@@ -66,24 +66,29 @@ def main():
     conn = create_connection(database)
     with conn:
         # create a employee_details
-        employee1 = ('Ong Zheng Jie', 'Registrar', 'password123');
-        employee2 = ('Chee Jay Sian', 'Consultant', 'password456');
-        employee3 = ('123', 'Medical Officer', '123');
-        employee4 = ('Boon Kai', 'Medical Officer', '123');
-        employee_list = (employee1,employee2,employee3,employee4)
+        employee0 = ('registrar_dummy', 'Registrar', '123');
+        employee1 = ('registrar_admin', 'Registrar', '123');
+        employee2 = ('consultant_admin', 'Consultant', '123');
+        employee3 = ('medical_officer_admin', 'Medical Officer', '123');
+        employee4 = ('registrar_user', 'Registrar', '123');
+        employee5 = ('consultant_user', 'Consultant', '123');
+        employee6 = ('medical_officer_user', 'Medical Officer', '123');
+        
+        employee_list = (employee0,employee1,employee2,employee3,employee4,employee5,employee6)
         for employee in employee_list:
             create_employee(conn,employee)
 
 
         
-        # create leave applications
-        leave_application_1 = ('1','Chee Jay Sian', 'inserted_row', '2022/03/12','2022/03/20','BOTH','sample_reason',time_now,'2','PENDING',time_now);
-        leave_application_2 = ('2','Chee Jay Sian', 'inserted_row','2022/03/01','2022/03/01','AM','sample_reason',time_now,'2','APPROVED', time_now);
-        leave_application_3 = ('3','Ong Zheng Jie', 'inserted_row','2022/03/01','2022/03/12','PM','sample_reason',time_now,'2','APPROVED', time_now);
-        leave_application_4 = ('4','123', 'inserted_row','2022/03/01','2022/03/25','PM','sample_reason',time_now,'2','APPROVED', time_now);
-        leave_application_5 = ('5','Boon Kai', 'inserted_row','2022/03/01','2022/03/25','PM','sample_reason',time_now,'2','APPROVED', time_now);
-        leave_application_list = (leave_application_1,leave_application_2, leave_application_3,leave_application_4,leave_application_5)
-        # print("leave_application_1: ", leave_application_1)
+        # # create leave applications
+        leave_application_0 = ('1','registrar_dummy', 'inserted_row', '2000/03/12','2000/03/20','BOTH','sample_reason',time_now,'2','PENDING',time_now);
+        # leave_application_2 = ('2','Chee Jay Sian', 'inserted_row','2022/03/01','2022/03/01','AM','sample_reason',time_now,'2','APPROVED', time_now);
+        # leave_application_3 = ('3','Ong Zheng Jie', 'inserted_row','2022/03/01','2022/03/12','PM','sample_reason',time_now,'2','APPROVED', time_now);
+        # leave_application_4 = ('4','123', 'inserted_row','2022/03/01','2022/03/25','PM','sample_reason',time_now,'2','APPROVED', time_now);
+        # leave_application_5 = ('5','Boon Kai', 'inserted_row','2022/03/01','2022/03/25','PM','sample_reason',time_now,'2','APPROVED', time_now);
+        # leave_application_list = (leave_application_1,leave_application_2, leave_application_3,leave_application_4,leave_application_5)
+        # # print("leave_application_1: ", leave_application_1)
+        leave_application_list = (leave_application_0,)
         for each in leave_application_list:
             # print(each)
             create_leave_application(conn,each)
@@ -91,9 +96,10 @@ def main():
 
 
         # create admins    
-        admin_1 = ('Ong Zheng Jie',);
-        admin_2 = ('Chee Jay Sian',);
-        admin_list = (admin_1,admin_2)
+        admin_1 = ('registrar_admin',);
+        admin_2 = ('consultant_admin',);
+        admin_3 = ('medical_officer_admin',);
+        admin_list = (admin_1,admin_2,admin_3);
 
         for each in admin_list:
             # print(each)

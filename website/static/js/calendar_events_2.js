@@ -15,26 +15,184 @@ const approve_leave_application = document.getElementById("approve_leave_applica
 const my_leaves_div = document.getElementById("my_leaves_div")
 
 
-// function openModal(date) {
-//   clicked = date;
-//   // console.log("you have clicked: ", clicked)
+function openModal(date) {
+  clicked = date;
+  // console.log("you have clicked: ", clicked)
 
-//   const eventForDay = events.find(e => e.date === clicked);
+  const eventForDay = events.find(e => e.date === clicked);
+  console.log(date)
+  // if (eventForDay) {
+  //   console.log("WE ARE DELETING EVENT NOW")
+  //   document.getElementById('eventText').innerText = eventForDay.title;
+  //   deleteEventModal.style.display = 'block';
+  // } else {
+  //   console.log("WE ARE ADDING EVENT NOW")
+  //   newEventModal.style.display = 'block';
+  // }
+  // console.log("WE ARE ADDING EVENT NOW")
+  
+  // console.log(approved_total_leave_by_roles_obj_positions)
+  retrieved_day_objects = approved_total_leave_by_roles_obj_positions.filter(function (item) {
+    return (
+      item.date === date)})[0]
+  // console.log(retrieved_day_objects)
+  consultant_pending_only_objects = retrieved_day_objects.consultant_pending
+  consultant_am_only_objects = retrieved_day_objects.consultant_am_only
+  consultant_pm_only_objects = retrieved_day_objects.consultant_pm_only
+  consultant_both_only_objects = retrieved_day_objects.consultant_both_only
 
-//   // if (eventForDay) {
-//   //   console.log("WE ARE DELETING EVENT NOW")
-//   //   document.getElementById('eventText').innerText = eventForDay.title;
-//   //   deleteEventModal.style.display = 'block';
-//   // } else {
-//   //   console.log("WE ARE ADDING EVENT NOW")
-//   //   newEventModal.style.display = 'block';
-//   // }
-//   // console.log("WE ARE ADDING EVENT NOW")
-//   newEventModal.style.display = 'block';
-//   // console.log (eventForDay)
+  registrar_pending_only_objects = retrieved_day_objects.registrar_pending
+  registrar_am_only_objects = retrieved_day_objects.registrar_am_only
+  registrar_pm_only_objects = retrieved_day_objects.registrar_pm_only
+  registrar_both_only_objects = retrieved_day_objects.registrar_both_only
 
-//   backDrop.style.display = 'block';
-// }
+  medical_officer_pending_only_objects = retrieved_day_objects.medical_officer_pending
+  medical_officer_am_only_objects = retrieved_day_objects.medical_officer_am_only
+  medical_officer_pm_only_objects = retrieved_day_objects.medical_officer_pm_only
+  medical_officer_both_only_objects = retrieved_day_objects.medical_officer_both_only
+
+  applied_both_table = document.getElementById("applied_both")
+  applied_am_table = document.getElementById("applied_am")
+  applied_pm_table = document.getElementById("applied_pm")
+  // console.log(applied_both_table.innerHTML)
+
+  if (applicant_position == "Consultant"){
+
+    for (each of consultant_pending_only_objects){
+      console.log(each)
+      document.getElementById("applied_pending").innerHTML +=  `
+      <tr>
+          <td> ${each.title}</td>
+          <td> ${each.employee_position}</td>     
+      </tr>
+      `
+    }
+
+
+    for (each of consultant_both_only_objects){
+      console.log(each)
+      document.getElementById("applied_both").innerHTML +=  `
+      <tr>
+          <td> ${each.title}</td>
+          <td> ${each.employee_position}</td>     
+      </tr>
+      `
+    }
+
+    for (each of consultant_am_only_objects){
+      console.log(each)
+      document.getElementById("applied_am").innerHTML +=  `
+      <tr>
+          <td> ${each.title}</td>
+          <td> ${each.employee_position}</td>     
+      </tr>
+      `
+    }
+
+    for (each of consultant_pm_only_objects){
+      console.log(each)
+      document.getElementById("applied_pm").innerHTML +=  `
+      <tr>
+          <td> ${each.title}</td>
+          <td> ${each.employee_position}</td>     
+      </tr>
+      `
+    }
+  }
+
+  else if (applicant_position == "Registrar"){
+    
+    for (each of registrar_pending_only_objects){
+      console.log(each)
+      document.getElementById("applied_pending").innerHTML +=  `
+      <tr>
+          <td> ${each.title}</td>
+          <td> ${each.employee_position}</td>     
+      </tr>
+      `
+    }
+    
+    
+    for (each of registrar_both_only_objects){
+      console.log(each)
+      document.getElementById("applied_both").innerHTML +=  `
+      <tr>
+          <td> ${each.title}</td>
+          <td> ${each.employee_position}</td>     
+      </tr>
+      `
+    }
+  
+    for (each of registrar_am_only_objects){
+      console.log(each)
+      document.getElementById("applied_am").innerHTML +=  `
+      <tr>
+          <td> ${each.title}</td>
+          <td> ${each.employee_position}</td>     
+      </tr>
+      `
+    }
+  
+    for (each of registrar_pm_only_objects){
+      console.log(each)
+      document.getElementById("applied_pm").innerHTML +=  `
+      <tr>
+          <td> ${each.title}</td>
+          <td> ${each.employee_position}</td>     
+      </tr>
+      `
+    }
+  }
+
+  else if (applicant_position == "Medical Officer"){
+    
+    for (each of medical_officer_pending_only_objects){
+      console.log(each)
+      document.getElementById("applied_pending").innerHTML +=  `
+      <tr>
+          <td> ${each.title}</td>
+          <td> ${each.employee_position}</td>     
+      </tr>
+      `
+    }
+    
+    
+    for (each of medical_officer_both_only_objects){
+      console.log(each)
+      document.getElementById("applied_both").innerHTML +=  `
+      <tr>
+          <td> ${each.title}</td>
+          <td> ${each.employee_position}</td>     
+      </tr>
+      `
+    }
+  
+    for (each of medical_officer_am_only_objects){
+      console.log(each)
+      document.getElementById("applied_am").innerHTML +=  `
+      <tr>
+          <td> ${each.title}</td>
+          <td> ${each.employee_position}</td>     
+      </tr>
+      `
+    }
+  
+    for (each of medical_officer_pm_only_objects){
+      console.log(each)
+      document.getElementById("applied_pm").innerHTML +=  `
+      <tr>
+          <td> ${each.title}</td>
+          <td> ${each.employee_position}</td>     
+      </tr>
+      `
+    }
+  }
+  newEventModal.style.display = 'block';
+  // console.log (eventForDay)
+
+  backDrop.style.display = 'block';
+  // return clicked
+}
 
 
 function load() {
@@ -157,6 +315,7 @@ function load() {
             eventDiv.classList.add('event');
             eventDiv.classList.add("CT")
             eventDiv.innerText = "CT (AM): " + each_event.consultant_count_am_both;
+            eventDiv.style = "background-color:blue"
             eventDiv.style.display = "none"
             daySquare.appendChild(eventDiv);
           }
@@ -166,6 +325,7 @@ function load() {
             eventDiv.classList.add('event');
             eventDiv.classList.add("CT")
             eventDiv.innerText = "CT (PM): " + each_event.consultant_count_pm_both;
+            eventDiv.style = "background-color:blue"
             eventDiv.style.display = "none"
             daySquare.appendChild(eventDiv);
           }
@@ -176,6 +336,7 @@ function load() {
             eventDiv.classList.add('event');
             eventDiv.classList.add("RS")
             eventDiv.innerText = "RS (AM): " + each_event.registrar_count_am_both;
+            eventDiv.style = "background-color:darkorange"
             eventDiv.style.display = "none"
             daySquare.appendChild(eventDiv);
           }
@@ -185,6 +346,7 @@ function load() {
             eventDiv.classList.add('event');
             eventDiv.classList.add("RS")
             eventDiv.innerText = "RS (PM): " + each_event.registrar_count_pm_both;
+            eventDiv.style = "background-color:darkorange"
             eventDiv.style.display = "none"
             daySquare.appendChild(eventDiv);
           }
@@ -195,6 +357,7 @@ function load() {
             eventDiv.classList.add('event');
             eventDiv.classList.add("MO")
             eventDiv.innerText = "MO (AM): " + each_event.medical_officer_count_am_both;
+            eventDiv.style = "background-color:LightCoral"
             eventDiv.style.display = "none"
             daySquare.appendChild(eventDiv);
           }
@@ -204,6 +367,7 @@ function load() {
             eventDiv.classList.add('event');
             eventDiv.classList.add("MO")
             eventDiv.innerText = "MO (PM): " + each_event.medical_officer_count_pm_both;
+            eventDiv.style = "background-color:LightCoral"
             eventDiv.style.display = "none"
             daySquare.appendChild(eventDiv);
           }
@@ -315,31 +479,63 @@ function load() {
 // }
 
 function closeModal() {
-  eventTitleInput.classList.remove('error');
+  // eventTitleInput.classList.remove('error');
+  document.getElementById("applied_pm").innerHTML = ''
+  document.getElementById("applied_am").innerHTML = ''
+  document.getElementById("applied_both").innerHTML = ''
+  document.getElementById("applied_pending").innerHTML = ''
+
+  document.getElementById("applied_pending").innerHTML +=
+  ` <tr>
+      <th>Name</th>
+      <th>Position</th>
+    </tr>
+  `
+
+  document.getElementById("applied_pm").innerHTML +=
+  ` <tr>
+      <th>Name</th>
+      <th>Position</th>
+    </tr>
+  `
+  document.getElementById("applied_am").innerHTML = 
+  ` <tr>
+      <th>Name</th>
+      <th>Position</th>
+    </tr>
+  `
+  document.getElementById("applied_both").innerHTML =
+  ` <tr>
+      <th>Name</th>
+      <th>Position</th>
+    </tr>
+  `
+
   newEventModal.style.display = 'none';
   deleteEventModal.style.display = 'none';
   backDrop.style.display = 'none';
-  eventTitleInput.value = '';
-  clicked = null;
+  // eventTitleInput.value = '';
+  // clicked = null;
   load();
+  
 }
 
-function saveEvent() {
-  if (eventTitleInput.value) {
-    console.log('eventTitleInput: ',eventTitleInput.value)
-    eventTitleInput.classList.remove('error');
+// function saveEvent() {
+//   if (eventTitleInput.value) {
+//     console.log('eventTitleInput: ',eventTitleInput.value)
+//     eventTitleInput.classList.remove('error');
 
-    events.push({
-      date: clicked,
-      title: eventTitleInput.value,
-    });
+//     events.push({
+//       date: clicked,
+//       title: eventTitleInput.value,
+//     });
 
-    localStorage.setItem('events', JSON.stringify(events));
-    closeModal();
-  } else {
-    eventTitleInput.classList.add('error');
-  }
-}
+//     localStorage.setItem('events', JSON.stringify(events));
+//     closeModal();
+//   } else {
+//     eventTitleInput.classList.add('error');
+//   }
+// }
 
 function deleteEvent() {
   events = events.filter(e => e.date !== clicked);
@@ -429,7 +625,7 @@ function close_my_leaves(){
   load();
 }
 
-document.getElementById('saveButton').addEventListener('click', saveEvent);
+// document.getElementById('saveButton').addEventListener('click', saveEvent);
 document.getElementById('cancelButton').addEventListener('click', closeModal);
 document.getElementById('deleteButton').addEventListener('click', deleteEvent);
 document.getElementById('closeButton').addEventListener('click', closeModal);
@@ -474,26 +670,35 @@ position_to_shortform = {'Medical Officer': 'MO', 'Registrar' : 'RS', 'Consultan
 //   console.log(each)
 // && !each_event.classList.contains("all_pending")
 
-if (is_admin == "0"){
-  for (each_event of events_to_be_shown){
 
-    if (each_event.classList.contains(position_to_shortform[applicant_position])){
-      each_event.style.display = "block"
-    }
+//changing display event 24 Mar 22 to arick requirements
+
+for (each_event of events_to_be_shown){
+
+  if (each_event.classList.contains(position_to_shortform[applicant_position])){
+    each_event.style.display = "block"
   }
-  
-  for (each of all_days){
-    // console.log(each)
-    each.style.height="110px"
-  }  
 }
+// if (is_admin == "0"){
+//   for (each_event of events_to_be_shown){
 
-else if (is_admin=="1"){
-  for(each_event of events_to_be_shown){
-    if (!each_event.classList.contains('class_specific_pending'))
-      each_event.style.display = "block"
-  }  
-}
+//     if (each_event.classList.contains(position_to_shortform[applicant_position])){
+//       each_event.style.display = "block"
+//     }
+//   }
+  
+//   for (each of all_days){
+//     // console.log(each)
+//     each.style.height="110px"
+//   }  
+// }
+
+// else if (is_admin=="1"){
+//   for(each_event of events_to_be_shown){
+//     if (!each_event.classList.contains('class_specific_pending'))
+//       each_event.style.display = "block"
+//   }  
+// }
 
 }
 
@@ -713,6 +918,69 @@ function sort_my_leaves_tableint(n) {
   }
 }
 
+
+function export_data(){
+  /* Get the HTML data using Element by Id */
+  var table = document.getElementById("leave_approval_table");
+
+  /* Declaring array variable */
+  var rows =[];
+
+    //iterate through rows of table
+  for(var i=0,row; row = table.rows[i];i++){
+      //rows would be accessed using the "row" variable assigned in the for loop
+      //Get each cell value/column from the row
+      column1 = row.cells[0].innerText;
+      column2 = row.cells[1].innerText;
+      column3 = row.cells[2].innerText;
+      column4 = row.cells[3].innerText;
+      column5 = row.cells[4].innerText;
+      column6 = row.cells[5].innerText;
+      column7 = row.cells[6].innerText;
+      column8 = row.cells[7].innerText;
+      column9 = row.cells[8].innerText;
+      column10 = row.cells[9].innerText;
+      column11 = row.cells[10].innerText;
+      column12 = row.cells[11].innerText;
+
+
+  /* add a new records in the array */
+      rows.push(
+          [
+              column1,
+              column2,
+              column3,
+              column4,
+              column5,
+              column6,
+              column7,
+              column8,
+              column9,
+              column10,
+              column11,
+              column12
+              
+              
+          ]
+      );
+
+      }
+      csvContent = "data:text/csv;charset=utf-8,";
+       /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
+      rows.forEach(function(rowArray){
+          row = rowArray.join(",");
+          csvContent += row + "\r\n";
+      });
+
+      /* create a hidden <a> DOM node and set its download attribute */
+      var encodedUri = encodeURI(csvContent);
+      var link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "Leave_Files.csv");
+      document.body.appendChild(link);
+       /* download the data file named "Stock_Price_Report.csv" */
+      link.click();
+}
 
 plastic_surgery()
 

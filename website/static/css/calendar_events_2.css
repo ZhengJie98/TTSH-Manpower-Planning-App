@@ -50,7 +50,7 @@ button {
 .day {
   width: 100px;
   padding: 10px;
-  height: 180px;
+  height: 110px;
   cursor: pointer;
   box-sizing: border-box;
   background-color: white;
